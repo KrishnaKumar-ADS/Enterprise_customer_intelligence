@@ -1,0 +1,30 @@
+
+project:
+  name: enterprise-customer-intelligence-platform
+  phase: 1
+
+dataset:
+  name: Online Retail II
+  provider: UCI Machine Learning Repository
+  uci_dataset_id: 502
+  source_url: https://archive.ics.uci.edu/dataset/502/online+retail+ii
+  doi: 10.24432/C5CG6D
+  license: CC BY 4.0
+  currency: GBP
+  raw_path: data/raw/online_retail_ii.csv
+  normalized_path: data/processed/transactions_normalized.csv
+
+validation:
+  minimum_rows: 1
+  minimum_valid_invoice_date_ratio: 0.99
+  minimum_numeric_parse_ratio: 0.99
+  missing_customer_id_is_error: false
+  duplicate_rows_are_error: false
+
+data_policy:
+  grain: invoice_line
+  preserve_raw_data: true
+  cancellation_rule: invoice_number_starts_with_C
+  retain_negative_quantity: true
+  create_targets_in_phase_1: false
+  train_models_in_phase_1: false

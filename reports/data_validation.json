@@ -1,0 +1,21 @@
+{
+  "status": "PASSED",
+  "raw_path": "data\\raw\\online_retail_ii.csv",
+  "normalized_path": "data\\processed\\transactions_normalized.csv",
+  "raw_rows": 541910,
+  "normalized_rows": 541910,
+  "row_count_preserved": true,
+  "valid_invoice_date_ratio": 1.0,
+  "numeric_parse_ratios": {
+    "quantity": 1.0,
+    "unit_price": 1.0
+  },
+  "errors": [],
+  "warnings": [
+    "Some transactions have missing customer IDs; define a customer-level exclusion/handling rule later.",
+    "Exact duplicate rows exist. They are reported but were not automatically removed.",
+    "Cancellation invoice lines exist and have been retained.",
+    "Negative quantities exist and have been retained.",
+    "Nonpositive unit prices exist and need a documented business-rule decision before revenue analysis."
+  ]
+}
