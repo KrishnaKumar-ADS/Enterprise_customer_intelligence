@@ -4,6 +4,29 @@ Production-oriented customer analytics for transaction validation, customer beha
 
 > **Reproducibility note:** The numerical results below are extracted from the generated artifacts currently present under `reports/`.
 
+## Predicted Business Outcomes
+
+The project predicts the following outcomes from historical transaction
+behaviour:
+
+1. **30-day churn risk:** which eligible customers are likely to become
+   inactive in the next 30 days. On the held-out test set, the selected
+   calibrated SVM achieved **0.7584 PR-AUC**, **0.6547 ROC-AUC**, **98.82%
+   recall**, and **64.64% precision** at the frozen threshold. At a 10%
+   contact capacity, the highest-risk customers achieved **80.28% precision**
+   among contacted customers.
+2. **90-day customer value:** the expected net transaction-line value in GBP
+   over the following 90 days. The selected voting regressor achieved
+   **GBP 291.78 MAE**, **GBP 1,210.47 RMSE**, and **0.2214 R²** on held-out
+   data. The top predicted value decile contained **53.20%** of held-out net
+   value.
+3. **Customer behaviour groups:** three segments were identified: a large
+   regular/low-frequency group (**60.56%**), a high-engagement group
+   (**31.36%**), and an inactive/lapsed group (**8.07%**).
+4. **Unusual transaction activity:** the anomaly detector produced **685
+   review alerts**, representing approximately 1% of the later-scored
+   population. These are investigation priorities, not fraud predictions.
+
 ## Dataset and validation
 
 ### Dataset profile
@@ -744,28 +767,6 @@ Images below are generated from the saved model and diagnostic outputs.
 - Current test suite: **30 passed**.
 - Numerical values are generated from local report artifacts and should be refreshed after a new modeling run.
 
-## Predicted Business Outcomes
-
-The project predicts the following outcomes from historical transaction
-behaviour:
-
-1. **30-day churn risk:** which eligible customers are likely to become
-   inactive in the next 30 days. On the held-out test set, the selected
-   calibrated SVM achieved **0.7584 PR-AUC**, **0.6547 ROC-AUC**, **98.82%
-   recall**, and **64.64% precision** at the frozen threshold. At a 10%
-   contact capacity, the highest-risk customers achieved **80.28% precision**
-   among contacted customers.
-2. **90-day customer value:** the expected net transaction-line value in GBP
-   over the following 90 days. The selected voting regressor achieved
-   **GBP 291.78 MAE**, **GBP 1,210.47 RMSE**, and **0.2214 R²** on held-out
-   data. The top predicted value decile contained **53.20%** of held-out net
-   value.
-3. **Customer behaviour groups:** three segments were identified: a large
-   regular/low-frequency group (**60.56%**), a high-engagement group
-   (**31.36%**), and an inactive/lapsed group (**8.07%**).
-4. **Unusual transaction activity:** the anomaly detector produced **685
-   review alerts**, representing approximately 1% of the later-scored
-   population. These are investigation priorities, not fraud predictions.
 
 ## Project Conclusion
 
