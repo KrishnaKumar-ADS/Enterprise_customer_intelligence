@@ -743,3 +743,50 @@ Images below are generated from the saved model and diagnostic outputs.
 
 - Current test suite: **30 passed**.
 - Numerical values are generated from local report artifacts and should be refreshed after a new modeling run.
+
+## Predicted Business Outcomes
+
+The project predicts the following outcomes from historical transaction
+behaviour:
+
+1. **30-day churn risk:** which eligible customers are likely to become
+   inactive in the next 30 days. On the held-out test set, the selected
+   calibrated SVM achieved **0.7584 PR-AUC**, **0.6547 ROC-AUC**, **98.82%
+   recall**, and **64.64% precision** at the frozen threshold. At a 10%
+   contact capacity, the highest-risk customers achieved **80.28% precision**
+   among contacted customers.
+2. **90-day customer value:** the expected net transaction-line value in GBP
+   over the following 90 days. The selected voting regressor achieved
+   **GBP 291.78 MAE**, **GBP 1,210.47 RMSE**, and **0.2214 R²** on held-out
+   data. The top predicted value decile contained **53.20%** of held-out net
+   value.
+3. **Customer behaviour groups:** three segments were identified: a large
+   regular/low-frequency group (**60.56%**), a high-engagement group
+   (**31.36%**), and an inactive/lapsed group (**8.07%**).
+4. **Unusual transaction activity:** the anomaly detector produced **685
+   review alerts**, representing approximately 1% of the later-scored
+   population. These are investigation priorities, not fraud predictions.
+
+## Project Conclusion
+
+The project successfully delivers a reproducible, time-safe customer
+intelligence pipeline covering data validation, feature generation,
+segmentation, anomaly ranking, churn-risk prediction, customer-value
+prediction, model comparison, tuning, calibration, and explainability. The
+held-out results show that the models are useful for prioritising retention
+and account-review work, and that value ranking can concentrate attention on
+customers associated with a disproportionate share of future recorded value.
+
+The outputs should be treated as **decision-support signals**, not as
+guaranteed outcomes. Churn is inferred from inactivity rather than a verified
+cancellation label, value is transaction-line value rather than profit, and
+anomaly alerts have no investigator-confirmed labels in the source data.
+Model explanations show association rather than causation. Consequently, the
+project is ready for supervised business review and a monitored pilot, but
+not for fully automated customer treatment or fraud decisions.
+
+The recommended next step is to run a controlled pilot: review the churn and
+anomaly queues with business users, record intervention and investigation
+outcomes, compare contacted and non-contacted customers, and use those
+outcomes to measure incremental value and recalibrate the production
+thresholds.
