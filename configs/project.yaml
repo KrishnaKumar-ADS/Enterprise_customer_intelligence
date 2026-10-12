@@ -1,8 +1,6 @@
-
 project:
   name: enterprise-customer-intelligence-platform
-  phase: 1
-
+  random_seed: 42
 dataset:
   name: Online Retail II
   provider: UCI Machine Learning Repository
@@ -13,14 +11,12 @@ dataset:
   currency: GBP
   raw_path: data/raw/online_retail_ii.csv
   normalized_path: data/processed/transactions_normalized.csv
-
 validation:
   minimum_rows: 1
   minimum_valid_invoice_date_ratio: 0.99
   minimum_numeric_parse_ratio: 0.99
   missing_customer_id_is_error: false
   duplicate_rows_are_error: false
-
 data_policy:
   grain: invoice_line
   preserve_raw_data: true
@@ -28,3 +24,130 @@ data_policy:
   retain_negative_quantity: true
   create_targets_in_phase_1: false
   train_models_in_phase_1: false
+data_preparation:
+  snapshot:
+    start_date: '2010-06-01'
+    frequency: MS
+    history_days: 180
+    horizon_days: 90
+  segmentation:
+    lookback_days: 365
+  chronological_splits:
+    train_start: '2010-06-01'
+    train_end_exclusive: '2010-11-01'
+    validation_start: '2011-01-01'
+    validation_end_exclusive: '2011-05-01'
+    test_start: '2011-07-01'
+  outputs:
+    customer_snapshots: data/processed/customer_snapshots.csv
+    customer_segmentation: data/processed/customer_segmentation.csv
+    anomaly_transactions: data/processed/anomaly_transactions.csv
+    manifest: reports/phase2_manifest.json
+paths:
+  customer_snapshots: data/processed/customer_snapshots_phase3.csv
+  customer_segmentation: data/processed/customer_segmentation.csv
+  anomaly_transactions: data/processed/anomaly_transactions.csv
+  reports_dir: reports/phase3
+  models_dir: models/phase3
+  splits_file: data/processed/splits_phase3.csv
+  customer_snapshots_source: data/processed/customer_snapshots.csv
+supervised:
+  churn_target: target_churn_30d
+  value_target: target_net_value_90d_gbp
+  horizon_days: 90
+  retention_capacity_fraction: 0.1
+  threshold_objective: f1
+  cv_max_folds: 3
+  minimum_train_snapshot_dates_per_fold: 1
+  minimum_candidate_improvement: 0.0005
+  validation_roles:
+    model_selection_fraction: 0.5
+    calibration_fraction: 0.25
+  latency_rows: 100
+  churn_horizon_days: 30
+  value_horizon_days: 90
+segmentation:
+  candidate_k_min: 2
+  candidate_k_max: 8
+  variance_to_retain: 0.9
+  seed_repeats: 5
+  time_stability_max_dates: 8
+anomaly:
+  reference_fraction: 0.7
+  contamination: 0.01
+  local_outlier_factor_enabled: true
+  pca_reconstruction_enabled: true
+  alert_fraction: 0.01
+  review_queue_rows: 500
+optuna:
+  storage: reports/phase3/optuna/studies.sqlite3
+  seed: 42
+  default_trials: 20
+  timeout_seconds: 3600
+comparison:
+  random_seed: 42
+  validation_role_for_diagnostics: model_selection
+  latency_rows: 100
+  batch_latency_rows: 512
+  top_error_rows_per_model: 250
+  subgroup_min_rows: 25
+  output_dir: reports/phase4
+  do_not_evaluate_test: true
+  required_models:
+    churn:
+    - dummy
+    - logistic_regression
+    - decision_tree
+    - random_forest
+    - xgboost
+    - lightgbm
+    - svm
+    - knn
+    value:
+    - dummy_median
+    - linear_regression
+    - ridge
+    - elastic_net
+    - random_forest_regressor
+    - xgboost_regressor
+    - lightgbm_regressor
+tuning:
+  seed: 42
+  output_dir: reports/phase5
+  model_dir: models/phase5
+  optuna:
+    trials_per_model: 10
+    timeout_seconds_per_model: 900
+    max_models_per_task: 2
+    seed: 42
+    storage: reports/phase5/optuna/phase5_studies.sqlite3
+  candidate_models:
+    churn:
+    - logistic_regression
+    - decision_tree
+    - random_forest
+    - svm
+    - svm_rbf
+    - knn
+    - xgboost
+    - lightgbm
+    value:
+    - ridge
+    - elastic_net
+    - decision_tree_regressor
+    - random_forest_regressor
+    - xgboost_regressor
+    - lightgbm_regressor
+  threshold_policy:
+    objective: f1
+    capacity_fraction: 0.1
+  approval:
+    minimum_churn_pr_auc_improvement_over_dummy: 0.0005
+    minimum_value_mae_improvement_over_dummy_gbp: 0.01
+  explainability:
+    permutation_rows: 500
+    permutation_repeats: 3
+    run_shap: true
+    shap_rows: 100
+    local_explanation_rows: 25
+    run_partial_dependence: true
